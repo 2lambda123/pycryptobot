@@ -67,9 +67,9 @@ def parser(app, coinbase_config, args={}):
             else:
                 try:
                     with open(app.api_key_file, "r") as f:
-                        key = f.readline().strip()
-                        secret = f.readline().strip()
-                        password = f.readline().strip()
+                        key = f.readline(5_000_000).strip()
+                        secret = f.readline(5_000_000).strip()
+                        password = f.readline(5_000_000).strip()
                     coinbase_config["api_key"] = key
                     coinbase_config["api_secret"] = secret
                     coinbase_config["api_passphrase"] = password

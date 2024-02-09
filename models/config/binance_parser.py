@@ -111,8 +111,8 @@ def parser(app, binance_config, args={}):
             else:
                 try:
                     with open(app.api_key_file, "r") as f:
-                        key = f.readline().strip()
-                        secret = f.readline().strip()
+                        key = f.readline(5_000_000).strip()
+                        secret = f.readline(5_000_000).strip()
                     binance_config["api_key"] = key
                     binance_config["api_secret"] = secret
                 except Exception:
