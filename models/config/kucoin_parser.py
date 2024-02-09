@@ -69,9 +69,9 @@ def parser(app, kucoin_config, args={}):
             else:
                 try:
                     with open(app.api_key_file, "r") as f:
-                        key = f.readline().strip()
-                        secret = f.readline().strip()
-                        password = f.readline().strip()
+                        key = f.readline(5_000_000).strip()
+                        secret = f.readline(5_000_000).strip()
+                        password = f.readline(5_000_000).strip()
                     kucoin_config["api_key"] = key
                     kucoin_config["api_secret"] = secret
                     kucoin_config["api_passphrase"] = password
