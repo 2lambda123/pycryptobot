@@ -9,11 +9,36 @@ from models.exchange.Granularity import Granularity
 
 
 def is_market_valid(market) -> bool:
+    """Checks if the given market code is valid.
+    Parameters:
+        - market (str): The market code to be checked.
+    Returns:
+        - bool: True if the market code is valid, False otherwise.
+    Processing Logic:
+        - Uses regular expression to validate market code.
+        - Market code must contain 1-20 alphanumeric characters, followed by a hyphen, followed by 2-5 alphanumeric characters.
+        - Returns True if the market code matches the pattern, False otherwise."""
+    
     p = re.compile(r"^[0-9A-Z]{1,20}\-[1-9A-Z]{2,5}$")
     return p.match(market) is not None
 
 
 def parse_market(market):
+    """"Parses a Coinbase Pro market into its base and quote currencies."
+    Parameters:
+        - market (str): A Coinbase Pro market in the format of "base_currency-quote_currency".
+    Returns:
+        - market (str): The original market input.
+        - base_currency (str): The base currency of the market.
+        - quote_currency (str): The quote currency of the market.
+    Processing Logic:
+        - Checks if the market is valid.
+        - Splits the market into base and quote currencies.
+        - Returns the original market input and the base and quote currencies.
+    Example:
+        parse_market("BTC-USD")
+        # Returns ("BTC-USD", "BTC", "USD")"""
+    
     if not is_market_valid(market):
         raise ValueError(f"Coinbase Pro market invalid: {market}")
 
@@ -22,6 +47,31 @@ def parse_market(market):
 
 
 def parser(app, coinbase_config, args={}):
+    """This function is used to parse and migrate API keys from a config file to a new file.
+    Parameters:
+        - app (object): The application object.
+        - coinbase_config (dict): A dictionary containing the API keys and URL.
+        - args (dict): Optional dictionary containing additional arguments.
+    Returns:
+        - None: This function does not return any value.
+    Processing Logic:
+        - Checks if an app object is passed.
+        - Checks if the coinbase_config is a dictionary.
+        - Checks if the coinbase_config contains the necessary API keys.
+        - Creates a new file and writes the API keys to it.
+        - Updates the config file with the new API key file location.
+        - Sets the app's API key file.
+        - Checks if an API key file is specified in the args or config.
+        - Reads the API key file and updates the coinbase_config.
+        - Validates the API key, secret, and passphrase.
+        - Validates the API URL.
+        - Merges the config and args dictionaries.
+        - Parses the default config.
+        - Sets the app's base and quote currencies.
+        - Parses the market from the config.
+        - Sets the app's market.
+        - Sets the app's granularity."""
+    
     if not app:
         raise Exception("No app is passed")
 
