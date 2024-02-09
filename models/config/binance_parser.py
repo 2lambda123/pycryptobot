@@ -8,6 +8,20 @@ from .default_parser import is_currency_valid, default_config_parse, merge_confi
 
 
 def is_market_valid(market) -> bool:
+    """Checks if a given market is valid.
+    Parameters:
+        - market (str): The market to be checked.
+    Returns:
+        - bool: True if the market is valid, False otherwise.
+    Processing Logic:
+        - Checks if the market is None.
+        - Checks if the market matches the pattern of a 4-25 character alphanumeric string.
+        - Checks if the market matches the pattern of a 1-20 character alphanumeric string followed by a hyphen and a 2-5 character alphanumeric string.
+        - Returns False if none of the patterns match.
+    Example:
+        is_market_valid("ABC123") # Returns True
+        is_market_valid("12345") # Returns False"""
+    
     if market is None:
         return False
 
@@ -21,6 +35,19 @@ def is_market_valid(market) -> bool:
 
 
 def parse_market(market):
+    """Parses a Binance market into its base currency, quote currency, and full market name.
+    Parameters:
+        - market (str): The Binance market to be parsed.
+    Returns:
+        - market (str): The full market name.
+        - base_currency (str): The base currency of the market.
+        - quote_currency (str): The quote currency of the market.
+    Processing Logic:
+        - Raises a ValueError if the market is not valid.
+        - Searches for the quote currency in a list of known quote currencies.
+        - Replaces the quote currency with an empty string to get the base currency.
+        - Raises a ValueError if the length of the market does not match the length of the base and quote currencies."""
+    
     base_currency = "BTC"
     quote_currency = "GBP"
 
@@ -65,6 +92,34 @@ def parse_market(market):
 
 
 def parser(app, binance_config, args={}):
+    """    if "use_sell_fee" in config:
+            app.use_sell_fee = config["use_sell_fee"]  # noqa: F841
+        if "use_sell_fee" in config:
+            app.use_sell_fee = config["use_sell_fee"]  # noqa: F841
+    Function: parser
+    This function parses the binance_config and args parameters to set up the app for trading on the Binance platform.
+    Parameters:
+        - app (object): The app object to be set up for trading.
+        - binance_config (dict): A dictionary containing the Binance API key, API secret, and API URL.
+        - args (dict): A dictionary containing additional arguments to be used in setting up the app.
+    Returns:
+        - None: This function does not return any value.
+    Processing Logic:
+        - Raises an exception if no app is passed.
+        - Migrates the API keys to a binance.key file.
+        - Sets the app's API key file to binance.key.
+        - Reads the binance element from the config.json file.
+        - Writes the new binance element to the config.json file.
+        - Raises an exception if unable to read the API key file.
+        - Validates the API key and secret are syntactically correct.
+        - Sets the app's API key and secret.
+        - Validates the API URL is valid.
+        - Sets the app's API URL.
+        - Sets the app's base and quote currencies.
+        - Parses the market from the config parameter.
+        - Sets the app's market.
+        - Sets the app's use_sell_fee parameter."""
+    
     if not app:
         raise Exception("No app is passed")
 

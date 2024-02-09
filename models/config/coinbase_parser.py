@@ -9,11 +9,41 @@ from models.exchange.Granularity import Granularity
 
 
 def is_market_valid(market) -> bool:
+    """Checks if the given market code is valid.
+    Parameters:
+        - market (str): The market code to be checked.
+    Returns:
+        - bool: True if the market code is valid, False otherwise.
+    Processing Logic:
+        - Uses regular expression to validate market code.
+        - Market code must be 1-20 characters long.
+        - Market code must contain only numbers and uppercase letters.
+        - Market code must be in the format of "XXX-XX", where X is a number or uppercase letter.
+    Example:
+        is_market_valid("ABC-12")  # returns True
+        is_market_valid("123-AB")  # returns False"""
+    
     p = re.compile(r"^[0-9A-Z]{1,20}\-[1-9A-Z]{2,5}$")
     return p.match(market) is not None
 
 
 def parse_market(market):
+    """Parses a given market into its base currency and quote currency.
+    Parameters:
+        - market (str): The market to be parsed.
+    Returns:
+        - market (str): The original market.
+        - base_currency (str): The base currency of the market.
+        - quote_currency (str): The quote currency of the market.
+    Processing Logic:
+        - Checks if the given market is valid.
+        - Splits the market into its base currency and quote currency.
+        - Returns the original market and its base and quote currencies.
+    Example:
+        market = "BTC-USD"
+        parse_market(market)
+        # Returns: ("BTC-USD", "BTC", "USD")"""
+    
     if not is_market_valid(market):
         raise ValueError(f"Coinbase market invalid: {market}")
 
@@ -22,6 +52,21 @@ def parse_market(market):
 
 
 def parser(app, coinbase_config, args={}):
+    """This function parses the provided Coinbase configuration and arguments to set up the necessary parameters for the app. It also validates the API key, secret, and URL for Coinbase.
+    Parameters:
+        - app (object): The app object to be configured.
+        - coinbase_config (dict): The configuration for Coinbase, including API key, secret, and URL.
+        - args (dict): Additional arguments to be merged with the Coinbase configuration.
+    Returns:
+        - None: This function does not return any value.
+    Processing Logic:
+        - Validates the API key and secret for Coinbase.
+        - Validates the API URL for Coinbase.
+        - Merges the provided arguments with the Coinbase configuration.
+        - Sets the base currency and quote currency for the app.
+        - Parses the market from the configuration.
+        - Sets the granularity for the app."""
+    
     if not app:
         raise Exception("No app is passed")
 
